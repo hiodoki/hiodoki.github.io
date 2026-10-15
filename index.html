@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070708">
+  <meta name="description" content="Личное интерактивное портфолио hiodoki.">
+  <title>hiodoki — личное пространство</title>
+
+  <!-- Элегантный шрифт. При желании можно заменить Inter на Poppins. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- Жидкий неоновый фон: четыре независимые органические массы -->
+  <div class="fluid-ocean" aria-hidden="true">
+    <div class="fluid-blob fluid-blob--blue"></div>
+    <div class="fluid-blob fluid-blob--purple"></div>
+    <div class="fluid-blob fluid-blob--red"></div>
+    <!-- Чёрная масса создаёт тёмный контраст и глубину -->
+    <div class="fluid-blob fluid-blob--black"></div>
+  </div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Панель появляется только после ухода с главного экрана. -->
+  <nav class="top-nav glass" id="topNav" aria-label="Основная навигация" aria-hidden="true">
+    <a href="#home" class="nav-link" data-screen="home" tabindex="-1">Главная</a>
+    <a href="#socials" class="nav-link" data-screen="socials" tabindex="-1">Соцсети</a>
+    <a href="#bio" class="nav-link" data-screen="bio" tabindex="-1">Биография</a>
+    <a href="#support" class="nav-link" data-screen="support" tabindex="-1">Поддержать</a>
+  </nav>
+
+  <main class="app-shell">
+    <!-- ЭКРАН 1: стартовое приветствие. -->
+    <section class="screen screen--home is-active" id="home" aria-labelledby="homeTitle">
+      <div class="hero">
+        <p class="eyebrow"><span class="status-dot"></span> ЛИЧНОЕ ПРОСТРАНСТВО</p>
+        <h1 id="homeTitle">Привет, это моя биография<span class="title-comma">,</span></h1>
+        <p class="hero-name">hiodoki</p>
+        <p class="hero-subtitle">Немного обо мне, моих проектах и цифровом мире.</p>
+
+        <div class="home-cards" aria-label="Разделы сайта">
+          <button class="feature-card feature-card--left glass" type="button" data-screen="socials">
+            <span class="feature-number">01 / CONNECT</span>
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M21 4 3.8 10.7c-1.2.5-1.2 1.2-.2 1.5l4.4 1.4 1.7 5.1c.2.6.1.8.7.8.5 0 .7-.2 1-.5l2.1-2.1 4.4 3.2c.8.4 1.4.2 1.6-.8L22 5.4C22.3 4.2 21.8 3.7 21 4ZM9 13.3l9-5.7c.4-.3.8-.1.5.2l-7.4 6.9-.3 3.1-1.8-4.5Z"/></svg>
+            </span>
+            <span class="feature-title">Соцсети</span>
+            <span class="feature-description">Найти меня в сети</span>
+            <span class="feature-arrow" aria-hidden="true">↗</span>
+          </button>
+
+          <button class="feature-card feature-card--middle glass" type="button" data-screen="bio">
+            <span class="feature-number">02 / PROFILE</span>
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.4-3.5 2.8-5.5 7-5.5s6.6 2 7 5.5"/></svg>
+            </span>
+            <span class="feature-title">Биография</span>
+            <span class="feature-description">Кто скрывается за ником</span>
+            <span class="feature-arrow" aria-hidden="true">↗</span>
+          </button>
+
+          <button class="feature-card feature-card--right glass" type="button" data-screen="support">
+            <span class="feature-number">03 / SUPPORT</span>
+            <span class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10s-8.8-4.9-8.8-10A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z"/></svg>
+            </span>
+            <span class="feature-title">Поддержать</span>
+            <span class="feature-description">Помочь проектам развиваться</span>
+            <span class="feature-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <p class="hero-footnote">SCROLL LESS. DISCOVER MORE.</p>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 2: замените ссылки и описания соцсетей на свои. -->
+    <section class="screen screen--content" id="socials" aria-labelledby="socialsTitle" hidden>
+      <header class="section-heading">
+        <p class="eyebrow">01 — CONNECTIONS</p>
+        <h2 id="socialsTitle">Мой цифровой след<span>.</span></h2>
+        <p>Места, где можно пересечься со мной.</p>
+      </header>
+
+      <div class="social-list">
+        <a class="social-card social-card--left glass" href="https://t.me/" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon social-icon--telegram" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M21.5 4.5 18.3 20c-.2 1.1-.8 1.4-1.7.9l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.7-7.9c.4-.3-.1-.5-.6-.2L5.9 14.1l-4.6-1.4c-1-.3-1-1 .2-1.5L19.6 3.7c.9-.3 2.2.2 1.9.8Z"/></svg>
+          </span>
+          <span class="social-copy"><strong>Telegram</strong><span>Мой основной канал связи</span></span>
+          <span class="social-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="social-card social-card--right glass" href="https://x.com/" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon social-icon--x" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.6 22H2.4l7.3-8.4L1.8 2h6.5l4.5 6.8L18.9 2Zm-1.1 18h1.7L7.3 3.9H5.5L17.8 20Z"/></svg>
+          </span>
+          <span class="social-copy"><strong>X / Twitter</strong><span>Мысли, новости и короткие заметки</span></span>
+          <span class="social-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="social-card social-card--left glass" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon social-icon--tiktok" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M19.6 6.2a5.8 5.8 0 0 1-3.5-3.5A6.6 6.6 0 0 1 15.8 1h-4v14.1a2.8 2.8 0 1 1-2-2.7V8.3a7 7 0 1 0 6 6.9V8a9.8 9.8 0 0 0 5.2 1.5v-4a5.7 5.7 0 0 1-1.4-.3Z"/></svg>
+          </span>
+          <span class="social-copy"><strong>TikTok</strong><span>Короткие видео и моменты из жизни</span></span>
+          <span class="social-arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="social-card social-card--right glass" href="https://steamcommunity.com/" target="_blank" rel="noopener noreferrer">
+          <span class="social-icon social-icon--steam" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-9.8 8l5.4 2.2a3.5 3.5 0 0 1 2-.6l2.4-3.5v-.2a4.5 4.5 0 1 1 4.5 4.5h-.1l-3.4 2.5a3.5 3.5 0 0 1-6.9.8L2.2 14A10 10 0 1 0 12 2Zm4.5 8.4a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM9.7 17.8a2.1 2.1 0 0 0 2-2.1 2.1 2.1 0 0 0-2.1-2.1 2 2 0 0 0-1.8 1.1l2.3.9-.9 2-1.9-.8a2.1 2.1 0 0 0 2.4 1Z"/></svg>
+          </span>
+          <span class="social-copy"><strong>Steam</strong><span>Игры, кооператив и игровые проекты</span></span>
+          <span class="social-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 3: замените возраст, статус и описание ниже на актуальные данные. -->
+    <section class="screen screen--content" id="bio" aria-labelledby="bioTitle" hidden>
+      <header class="section-heading">
+        <p class="eyebrow">02 — PERSONAL FILE</p>
+        <h2 id="bioTitle">Досье пользователя<span>.</span></h2>
+        <p>Некоторые данные открыты для общего доступа.</p>
+      </header>
+
+      <article class="bio-panel glass">
+        <div class="avatar-column">
+          <!-- Чтобы вставить аватар, замените содержимое .avatar-placeholder на:
+               <img src="images/avatar.jpg" alt="Аватар hiodoki"> -->
+          <div class="avatar-placeholder" aria-label="Место для аватарки">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="35" r="17"/>
+              <path d="M18 87c2-20 13-30 32-30s30 10 32 30"/>
+            </svg>
+            <span>AVATAR / 001</span>
+          </div>
+          <p class="avatar-caption">IDENTITY VERIFIED <span>●</span></p>
+          <div class="file-stamp">HIO<span>DOKI</span><small>PERSONAL ARCHIVE</small></div>
+        </div>
+
+        <div class="bio-details">
+          <div class="bio-topline"><span>ПРОФИЛЬ / 001</span><span class="live-status"><i></i> В сети</span></div>
+          <h3 id="bioName">hiodoki</h3>
+          <dl class="bio-facts">
+            <div><dt>Никнейм</dt><dd>hiodoki</dd></div>
+            <div><dt>Возраст</dt><dd>18+ / заменить</dd></div>
+            <div><dt>Статус</dt><dd>В сети, когда не сплю</dd></div>
+            <div><dt>Основной класс</dt><dd>Одиночка</dd></div>
+          </dl>
+          <div class="about-block">
+            <p class="eyebrow">О СЕБЕ / ABOUT ME</p>
+            <p>Появился на свет ради теста этого сайта — и, кажется, остался. Люблю цифровые миры, новые идеи и проекты, которые сначала выглядят невозможными.</p>
+            <p><strong>Навыки:</strong> кодинг — в процессе прокачки; сарказм — без лимита; откладывание сна — легендарный уровень.</p>
+          </div>
+          <div class="bio-footer"><span>ACCESS: PUBLIC</span><span>LAST UPDATE: JUST NOW</span></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ЭКРАН 4: замените тестовые URL ниже на реальные ссылки для поддержки. -->
+    <section class="screen screen--content" id="support" aria-labelledby="supportTitle" hidden>
+      <header class="section-heading">
+        <p class="eyebrow">03 — SHOW SOME LOVE</p>
+        <h2 id="supportTitle">Поддержать автора<span>.</span></h2>
+        <p>Любая поддержка помогает уделять больше времени идеям и проектам.</p>
+      </header>
+
+      <div class="support-grid">
+        <a class="support-card support-card--blue glass" href="https://google.com" target="_blank" rel="noopener noreferrer">
+          <span class="support-index">OPTION / 01</span>
+          <span class="support-symbol" aria-hidden="true">₽</span>
+          <strong>На карту</strong>
+          <span>Прямой перевод</span>
+          <span class="support-cta">Перейти <b>↗</b></span>
+        </a>
+        <a class="support-card support-card--purple glass" href="https://google.com" target="_blank" rel="noopener noreferrer">
+          <span class="support-index">OPTION / 02</span>
+          <span class="support-symbol" aria-hidden="true">₿</span>
+          <strong>Crypto Bot</strong>
+          <span>Криптовалютная поддержка</span>
+          <span class="support-cta">Перейти <b>↗</b></span>
+        </a>
+        <a class="support-card support-card--red glass" href="https://google.com" target="_blank" rel="noopener noreferrer">
+          <span class="support-index">OPTION / 03</span>
+          <span class="support-symbol" aria-hidden="true">♥</span>
+          <strong>DonationAlerts</strong>
+          <span>Поддержать через донат</span>
+          <span class="support-cta">Перейти <b>↗</b></span>
+        </a>
+      </div>
+      <p class="support-note">Поддержка добровольна. Спасибо, что заглянул.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>© <span id="year"></span> HIODOKI</span><span>BUILT IN THE DIGITAL VOID</span></footer>
+  <div class="screen-reader-status" id="screenStatus" aria-live="polite"></div>
+</body>
+</html>
