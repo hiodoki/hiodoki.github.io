@@ -25,11 +25,11 @@
    * URL строится относительно папки самого script.js — работает и на GitHub Pages в подпапке.
    */
   const SCRIPT_BASE_URL = new URL("./", document.currentScript?.src || document.baseURI);
-  const HOVER_SOUND_URL = new URL("hover.mp3?v=audio-fix-2", SCRIPT_BASE_URL).href;
-  const CLICK_SOUND_URL = new URL("click.mp3?v=audio-fix-2", SCRIPT_BASE_URL).href;
+  const HOVER_SOUND_URL = new URL("hover.mp3?v=audio-fix-3", SCRIPT_BASE_URL).href;
+  const CLICK_SOUND_URL = new URL("click.mp3?v=audio-fix-3", SCRIPT_BASE_URL).href;
   const INTERACTIVE_SELECTOR = "a, button, [role=\"button\"]";
-  const HOVER_VOLUME = 0.48;
-  const CLICK_VOLUME = 0.42;
+  const HOVER_VOLUME = 0.24;
+  const CLICK_VOLUME = 0.21;
   let audioUnlocked = false;
   const reportedAudioErrors = new Set();
 
