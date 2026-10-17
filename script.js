@@ -19,56 +19,102 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /*
-   * UI-звуки. Оба файла лежат рядом с index.html в корне сайта.
-   * Hover создаёт новый Audio на каждое наведение: звуки могут накладываться
-   * и доигрывают свой хвост, не обрывая предыдущий экземпляр.
-   * На сенсорных устройствах hover не используется.
+   * UI-звуки.
+   * Используются обычные MP3 hover.mp3 и click.mp3 рядом с index.html.
+   * hover.mp3 и click.mp3 созданы из пользовательских исходников с нормализованной громкостью.
+   * URL строится относительно папки самого script.js — работает и на GitHub Pages в подпапке.
    */
-  const HOVER_SOUND_URL = "528561__jummit__soft-ui-button-click.ogg";
-  const CLICK_SOUND_URL = "750435__rescopicsound__ui-click-menu-modern-interface-select-small-01.mp3";
+  const SCRIPT_BASE_URL = new URL("./", document.currentScript?.src || document.baseURI);
+  const HOVER_SOUND_URL = new URL("hover.mp3?v=audio-fix-2", SCRIPT_BASE_URL).href;
+  const CLICK_SOUND_URL = new URL("click.mp3?v=audio-fix-2", SCRIPT_BASE_URL).href;
   const INTERACTIVE_SELECTOR = "a, button, [role=\"button\"]";
-  const HOVER_VOLUME = 0.13;
-  const CLICK_VOLUME = 0.22;
+  const HOVER_VOLUME = 0.48;
+  const CLICK_VOLUME = 0.42;
+  let audioUnlocked = false;
+  const reportedAudioErrors = new Set();
+
+  function attachAudioErrorReport(audio, label) {
+    audio.addEventListener("error", () => {
+      if (reportedAudioErrors.has(label)) return;
+      reportedAudioErrors.add(label);
+      console.error(
+        `[hiodoki audio] Не удалось загрузить ${label}. Проверь, что файл лежит рядом с index.html:`,
+        audio.currentSrc || audio.src,
+        audio.error || "неизвестная ошибка"
+      );
+    });
+  }
 
   const clickSound = new Audio(CLICK_SOUND_URL);
   clickSound.preload = "auto";
   clickSound.volume = CLICK_VOLUME;
+  attachAudioErrorReport(clickSound, "click.mp3");
+  clickSound.load();
+
+  // Hover тоже заранее запрашивается, чтобы первый звук запускался без заметной задержки.
+  const hoverPreloader = new Audio(HOVER_SOUND_URL);
+  hoverPreloader.preload = "auto";
+  attachAudioErrorReport(hoverPreloader, "hover.mp3");
+  hoverPreloader.load();
 
   function playHoverSound() {
+    // До первого осознанного действия браузер может запрещать звук по своей autoplay-политике.
+    if (!audioUnlocked) return;
+
+    // Отдельный экземпляр на каждое наведение: быстрые движения мыши не обрезают хвосты.
     const hoverSound = new Audio(HOVER_SOUND_URL);
     hoverSound.preload = "auto";
     hoverSound.volume = HOVER_VOLUME;
+    attachAudioErrorReport(hoverSound, "hover.mp3");
     hoverSound.addEventListener("ended", () => {
-      // Освобождаем аудиоданные после полного завершения звука.
       hoverSound.removeAttribute("src");
       hoverSound.load();
     }, { once: true });
-    hoverSound.play().catch(() => {
-      // Браузер может запретить звук до первого взаимодействия или если MP3 отсутствует.
+    hoverSound.play().catch((error) => {
+      console.warn("[hiodoki audio] Не удалось воспроизвести hover.mp3:", error);
     });
   }
 
   function playClickSound() {
-    // У клика один общий экземпляр: всегда мгновенно запускаем звук с начала.
+    // Один экземпляр для клика: каждый новый клик начинает короткий эффект сначала.
+    clickSound.pause();
     try {
       clickSound.currentTime = 0;
     } catch (_error) {
-      // Если метаданные ещё не загружены, браузер сам продолжит загрузку.
+      // Если файл ещё загружается, play() дождётся доступности аудиоданных.
     }
-    clickSound.play().catch(() => {
-      // Не ломаем навигацию, если аудио недоступно или заблокировано браузером.
+    clickSound.play().catch((error) => {
+      console.warn("[hiodoki audio] Не удалось воспроизвести click.mp3:", error);
     });
   }
 
+  // Первый реальный жест пользователя снимает autoplay-блокировку браузера.
+  // Звук клика запускается на pointerdown, чтобы не зависеть от дальнейшей SPA-навигации.
   if (hoverSupported) {
-    document.querySelectorAll(INTERACTIVE_SELECTOR).forEach((element) => {
-      element.addEventListener("mouseenter", playHoverSound, { passive: true });
-    });
+    document.addEventListener("pointerover", (event) => {
+      if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
+      if (!(event.target instanceof Element)) return;
+      const control = event.target.closest(INTERACTIVE_SELECTOR);
+      if (!control) return;
+      const previousTarget = event.relatedTarget;
+      if (previousTarget instanceof Node && control.contains(previousTarget)) return;
+      playHoverSound();
+    }, { passive: true });
   }
 
-  // Capture гарантирует запуск короткого звука до обработчиков перехода/навигации.
+  document.addEventListener("pointerdown", (event) => {
+    if (event.isPrimary === false || event.button !== 0) return;
+    audioUnlocked = true;
+    if (!(event.target instanceof Element)) return;
+    if (event.target.closest(INTERACTIVE_SELECTOR)) playClickSound();
+  }, true);
+
+  // Клавиатурная активация (Enter / Space) генерирует click без pointerdown.
   document.addEventListener("click", (event) => {
-    if (event.target instanceof Element && event.target.closest(INTERACTIVE_SELECTOR)) {
+    if (!(event.target instanceof Element)) return;
+    if (!event.target.closest(INTERACTIVE_SELECTOR)) return;
+    if (event.detail === 0) {
+      audioUnlocked = true;
       playClickSound();
     }
   }, true);
