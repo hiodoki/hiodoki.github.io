@@ -19,13 +19,13 @@
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /*
-   * UI-звуки. Поместите hover.mp3 и click.mp3 рядом с index.html.
+   * UI-звуки. Оба файла лежат рядом с index.html в корне сайта.
    * Hover создаёт новый Audio на каждое наведение: звуки могут накладываться
    * и доигрывают свой хвост, не обрывая предыдущий экземпляр.
    * На сенсорных устройствах hover не используется.
    */
-  const HOVER_SOUND_URL = "hover.mp3";
-  const CLICK_SOUND_URL = "click.mp3";
+  const HOVER_SOUND_URL = "528561__jummit__soft-ui-button-click.ogg";
+  const CLICK_SOUND_URL = "750435__rescopicsound__ui-click-menu-modern-interface-select-small-01.mp3";
   const INTERACTIVE_SELECTOR = "a, button, [role=\"button\"]";
   const HOVER_VOLUME = 0.13;
   const CLICK_VOLUME = 0.22;
