@@ -10,12 +10,68 @@
   const screenStatus = document.getElementById("screenStatus");
   const validScreens = new Set(screens.map((screen) => screen.id));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hoverSupported = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   let currentScreen = document.querySelector(".screen.is-active")?.id || "home";
   let isSwitching = false;
   const TRANSITION_MS = reduceMotion ? 0 : 400;
 
   // Подставляем текущий год в футер автоматически.
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /*
+   * UI-звуки. Поместите hover.mp3 и click.mp3 рядом с index.html.
+   * Hover создаёт новый Audio на каждое наведение: звуки могут накладываться
+   * и доигрывают свой хвост, не обрывая предыдущий экземпляр.
+   * На сенсорных устройствах hover не используется.
+   */
+  const HOVER_SOUND_URL = "hover.mp3";
+  const CLICK_SOUND_URL = "click.mp3";
+  const INTERACTIVE_SELECTOR = "a, button, [role=\"button\"]";
+  const HOVER_VOLUME = 0.13;
+  const CLICK_VOLUME = 0.22;
+
+  const clickSound = new Audio(CLICK_SOUND_URL);
+  clickSound.preload = "auto";
+  clickSound.volume = CLICK_VOLUME;
+
+  function playHoverSound() {
+    const hoverSound = new Audio(HOVER_SOUND_URL);
+    hoverSound.preload = "auto";
+    hoverSound.volume = HOVER_VOLUME;
+    hoverSound.addEventListener("ended", () => {
+      // Освобождаем аудиоданные после полного завершения звука.
+      hoverSound.removeAttribute("src");
+      hoverSound.load();
+    }, { once: true });
+    hoverSound.play().catch(() => {
+      // Браузер может запретить звук до первого взаимодействия или если MP3 отсутствует.
+    });
+  }
+
+  function playClickSound() {
+    // У клика один общий экземпляр: всегда мгновенно запускаем звук с начала.
+    try {
+      clickSound.currentTime = 0;
+    } catch (_error) {
+      // Если метаданные ещё не загружены, браузер сам продолжит загрузку.
+    }
+    clickSound.play().catch(() => {
+      // Не ломаем навигацию, если аудио недоступно или заблокировано браузером.
+    });
+  }
+
+  if (hoverSupported) {
+    document.querySelectorAll(INTERACTIVE_SELECTOR).forEach((element) => {
+      element.addEventListener("mouseenter", playHoverSound, { passive: true });
+    });
+  }
+
+  // Capture гарантирует запуск короткого звука до обработчиков перехода/навигации.
+  document.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest(INTERACTIVE_SELECTOR)) {
+      playClickSound();
+    }
+  }, true);
 
   // На главной панель навигации скрыта; на остальных экранах — доступна.
   function updateNavigation(screenId) {

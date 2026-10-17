@@ -42,6 +42,19 @@ button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset:
   pointer-events: none;
   filter: blur(140px);
   opacity: 0.35;
+  contain: paint;
+}
+
+/* Текстура лёгкая и статичная: не создаёт дополнительной нагрузки на кадры. */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .12;
+  background-image: radial-gradient(rgba(255,255,255,.14) .5px, transparent .5px);
+  background-size: 5px 5px;
+  mask-image: linear-gradient(to bottom, #000, transparent 95%);
 }
 
 .fluid-blob {
@@ -213,10 +226,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset:
 .section-heading { margin-bottom: 38px; }
 .section-heading h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -.065em; line-height: 1.15; }
 .section-heading > p:last-child { margin: 13px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.7; }
-.social-list { display: flex; max-width: 790px; flex-direction: column; gap: 15px; margin: 0 auto; }
+.social-list { display: flex; width: 100%; max-width: 790px; flex-direction: column; gap: 15px; margin: 0; }
 .social-card { display: flex; width: min(78%, 580px); min-height: 112px; align-items: center; gap: 20px; padding: 22px 25px; border-radius: 18px; transition: transform .35s var(--ease), border-color .3s, box-shadow .3s; animation: social-left .65s var(--ease) both; }
 .social-card--left { align-self: flex-start; }
-.social-card--right { align-self: flex-end; animation-name: social-right; }
+.social-card--right { align-self: flex-start; animation-name: social-right; }
 .social-card:nth-child(1) { animation-delay: .06s; }
 .social-card:nth-child(2) { animation-delay: .15s; }
 .social-card:nth-child(3) { animation-delay: .24s; }
@@ -282,7 +295,34 @@ button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset:
 .site-footer { position: absolute; z-index: 1; right: 24px; bottom: 19px; left: 24px; display: flex; justify-content: space-between; color: #525264; font-size: .53rem; font-weight: 700; letter-spacing: .16em; pointer-events: none; }
 .screen-reader-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
+@keyframes liquid-mobile-a {
+  0% { transform: translate3d(-3%, -2%, 0) rotate(-8deg) scale(1); }
+  50% { transform: translate3d(7%, 4%, 0) rotate(14deg) scale(1.05); }
+  100% { transform: translate3d(-3%, -2%, 0) rotate(-8deg) scale(1); }
+}
+@keyframes liquid-mobile-b {
+  0% { transform: translate3d(4%, -4%, 0) rotate(0deg) scale(1.03); }
+  50% { transform: translate3d(-5%, 5%, 0) rotate(-18deg) scale(.97); }
+  100% { transform: translate3d(4%, -4%, 0) rotate(0deg) scale(1.03); }
+}
+
 @media (max-width: 760px) {
+  /* На мобильных большие размытия и морфинг border-radius могут вызывать рывки.
+     Снижаем стоимость фона, сохраняя движение, цвета и глубину свечения. */
+  .fluid-ocean {
+    inset: -8%;
+    filter: blur(72px);
+    opacity: .30;
+  }
+  .fluid-blob { will-change: transform; }
+  .fluid-blob--blue { min-width: 280px; min-height: 280px; animation-name: liquid-mobile-a; }
+  .fluid-blob--purple { min-width: 270px; min-height: 300px; animation-name: liquid-mobile-b; }
+  .fluid-blob--red { min-width: 290px; min-height: 250px; animation-name: liquid-mobile-b; }
+  .fluid-blob--black { min-width: 260px; min-height: 230px; animation-name: liquid-mobile-a; }
+  .glass {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
   .app-shell { width: min(100% - 32px, 560px); }
   .screen--home { padding-top: 100px; }
   .home-cards { grid-template-columns: 1fr; gap: 12px; margin-top: 35px; }
@@ -312,6 +352,15 @@ button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset:
   .bio-facts > div { grid-template-columns: 100px 1fr; }
   .bio-footer { flex-direction: column; }
 }
+@media (hover: none) and (pointer: coarse) {
+  .feature-card:hover,
+  .social-card:hover,
+  .support-card:hover {
+    transform: none;
+  }
+  .support-card:hover::after { transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .fluid-blob { animation: none; }
